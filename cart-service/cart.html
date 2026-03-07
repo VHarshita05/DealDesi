@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>DealDesi Shopping Bag</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+}
+
+.header{
+background:white;
+padding:15px;
+font-size:22px;
+font-weight:bold;
+border-bottom:1px solid #eee;
+}
+
+.cart-container{
+max-width:500px;
+margin:auto;
+background:white;
+padding:20px;
+}
+
+.cart-item{
+display:flex;
+margin-bottom:20px;
+border-bottom:1px solid #eee;
+padding-bottom:15px;
+}
+
+.cart-item img{
+width:90px;
+border-radius:8px;
+}
+
+.info{
+flex:1;
+margin-left:15px;
+}
+
+.price{
+font-weight:bold;
+}
+
+.remove{
+background:#ff4d4d;
+border:none;
+color:white;
+padding:5px 10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+.total{
+margin-top:20px;
+font-size:20px;
+}
+
+.checkout{
+width:100%;
+background:#0c8f45;
+color:white;
+border:none;
+padding:15px;
+font-size:18px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.empty{
+text-align:center;
+padding:60px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">🛍 DealDesi Shopping Bag</div>
+
+<div class="cart-container" id="cart-container"></div>
+
+<script>
+
+function loadCart(){
+
+let cart = JSON.parse(localStorage.getItem("dealdesi_cart")) || [];
+
+const container = document.getElementById("cart-container");
+
+container.innerHTML="";
+
+if(cart.length===0){
+
+container.innerHTML=`
+
+<div class="empty">
+
+<h2>Your Bag is Empty!</h2>
+
+<p>Start shopping now</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+let total=0;
+
+cart.forEach((item,index)=>{
+
+total += item.price * item.quantity;
+
+container.innerHTML += `
+
+<div class="cart-item">
+
+<img src="${item.image}">
+
+<div class="info">
+
+<h4>${item.name}</h4>
+
+<div class="price">₹${item.price}</div>
+
+<p>Qty: ${item.quantity}</p>
+
+<button class="remove" onclick="removeItem(${index})">Remove</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+container.innerHTML += `
+
+<div class="total">
+
+Total: ₹ ${total}
+
+</div>
+
+<button class="checkout">Checkout</button>
+
+`;
+
+}
+
+function removeItem(index){
+
+let cart = JSON.parse(localStorage.getItem("dealdesi_cart"));
+
+cart.splice(index,1);
+
+localStorage.setItem("dealdesi_cart",JSON.stringify(cart));
+
+loadCart();
+
+}
+
+loadCart();
+
+</script>
+
+</body>
+
+</html>
