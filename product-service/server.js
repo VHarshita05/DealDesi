@@ -15,23 +15,32 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Load products from CSV
 let products = [];
 
-fs.createReadStream(path.join(__dirname, 'products.csv'))
-  .pipe(csv())
-  .on('data', (row) => {
-    products.push(row);
-  })
-  .on('end', () => {
-    console.log(`Loaded ${products.length} products from CSV`);
-  });
+const csvPath = path.join(__dirname, 'products.csv');
 
-// Health check (for load balancer / Render)
+if (fs.existsSync(csvPath)) {
+  fs.createReadStream(csvPath)
+    .pipe(csv())
+    .on('data', (row) => {
+      products.push(row);
+    })
+    .on('end', () => {
+      console.log(`Loaded ${products.length} products from CSV`);
+    })
+    .on('error', (err) => {
+      console.error("CSV Read Error:", err);
+    });
+} else {
+  console.error("products.csv not found at:", csvPath);
+}
+
+// Health check (for Render / Load Balancer)
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
 // Homepage
 app.get('/', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Product API
