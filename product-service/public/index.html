@@ -172,17 +172,19 @@ products.forEach(p=>{
 
 let img = "https://via.placeholder.com/400x600";
 
-if (p.image) {
-  const match = p.images.match(/https:\/\/[^',\]]+/);
+if (p.images) {
+
+  const match = p.images.match(/https:\/\/images\.asos-media\.com[^',\]]+/);
 
   if (match) {
     img = match[0];
 
-    // remove ASOS image parameters
+    // remove ASOS resize parameters
     if (img.includes("?")) {
       img = img.split("?")[0];
     }
   }
+
 }
 const card = document.createElement("div");
 card.className = "product-card";
