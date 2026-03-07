@@ -679,101 +679,44 @@
         </a>
     </nav>
 <script>
-/* ================================
-   CONFIG
-================================ */
-const BASE_API = "https://dealdesi-product-service.onrender.com/products";
 
+const API = "https://dealdesi-product-service.onrender.com/products";
 const productGrid = document.querySelector(".product-grid");
-const categoryHeader = document.querySelector(".category-header");
-const categoryList = document.querySelector(".category-list");
 
-/* ================================
-   LOAD PRODUCTS
-================================ */
-async function loadProducts(category = "") {
-  try {
+async function loadProducts(){
 
-    const url = category
-      ? `${BASE_API}?category=${encodeURIComponent(category)}`
-      : BASE_API;
+  try{
 
-    const res = await fetch(url);
+    const res = await fetch(API);
     const products = await res.json();
 
     productGrid.innerHTML = "";
 
-    if (!products || products.length === 0) {
-      productGrid.innerHTML = "<p>No products found</p>";
-      return;
-    }
-
-    products.forEach(product => {
-
-      const image =
-        product.image ||
-        "https://via.placeholder.com/400x600?text=No+Image";
+    products.forEach(p => {
 
       const card = document.createElement("div");
       card.className = "product-card";
 
       card.innerHTML = `
-        <img src="${image}" class="product-image">
+        <img src="${p.image || 'https://via.placeholder.com/400x600'}" class="product-image">
         <div class="product-info">
-          <div class="product-name">${product.name}</div>
-          <div class="product-category">${product.category}</div>
-          <div class="product-price">₹${product.price}</div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-category">${p.category}</div>
+            <div class="product-price">₹${p.price}</div>
         </div>
       `;
 
       productGrid.appendChild(card);
-    });
-
-  } catch (err) {
-    console.error("Product load error:", err);
-  }
-}
-
-/* ================================
-   LOAD CATEGORIES
-================================ */
-async function loadCategories() {
-
-  try {
-
-    const res = await fetch(BASE_API);
-    const products = await res.json();
-
-    const categories = [...new Set(products.map(p => p.category))];
-
-    categoryList.innerHTML = "";
-
-    categories.forEach(cat => {
-
-      const li = document.createElement("li");
-      li.className = "category-item";
-      li.innerText = cat;
-
-      li.onclick = () => {
-        categoryHeader.innerText = cat.toUpperCase();
-        loadProducts(cat);
-      };
-
-      categoryList.appendChild(li);
 
     });
 
-  } catch (err) {
-    console.error("Category load error:", err);
+  }catch(err){
+    console.log("Error loading products", err);
   }
 
 }
 
-/* ================================
-   INIT
-================================ */
 loadProducts();
-loadCategories();
 
 </script>
 const CATEGORY_API = "https://dealdesi-product-service.onrender.com/products/categories";
