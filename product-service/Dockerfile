@@ -10,8 +10,8 @@ COPY server.js ./server.js
 COPY routes ./routes
 COPY db ./db
 COPY public ./public
+COPY products.csv ./products.csv
 
 EXPOSE 3000
 
 CMD ["node", "server.js"]
-
