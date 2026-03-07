@@ -694,17 +694,28 @@ async function loadProducts(){
 
     products.forEach(p => {
 
-      const card = document.createElement("div");
-      card.className = "product-card";
+      let img = "https://via.placeholder.com/400x600";
 
-      card.innerHTML = `
-        <img src="${p.image || 'https://via.placeholder.com/400x600'}" class="product-image">
-        <div class="product-info">
-            <div class="product-name">${p.name}</div>
-            <div class="product-category">${p.category}</div>
-            <div class="product-price">₹${p.price}</div>
-        </div>
-      `;
+if (p.images) {
+  try {
+    const arr = JSON.parse(p.images.replace(/'/g,'"'));
+    img = arr[0];
+  } catch {
+    img = p.images;
+  }
+}
+
+const card = document.createElement("div");
+card.className = "product-card";
+
+card.innerHTML = `
+  <img src="${img}" class="product-image">
+  <div class="product-info">
+      <div class="product-name">${p.name}</div>
+      <div class="product-category">${p.category}</div>
+      <div class="product-price">₹${p.price}</div>
+  </div>
+`;
 
       productGrid.appendChild(card);
 
