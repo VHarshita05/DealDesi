@@ -170,33 +170,26 @@ productGrid.innerHTML=""
 
 products.forEach(p=>{
 
-let img="https://via.placeholder.com/400x600"
+let img = "https://via.placeholder.com/400x600";
 
-if(p.images){
-try{
-const arr=JSON.parse(p.images.replace(/'/g,'"'))
-img=arr[0]
-
-if(img && img.startsWith("//")){
-img="https:"+img
+if (p.images) {
+  const match = p.images.match(/https:\/\/[^',\]]+/);
+  if (match) {
+    img = match[0];
+  }
 }
 
-}catch{
-img=p.images
-}
-}
+const card = document.createElement("div");
+card.className = "product-card";
 
-const card=document.createElement("div")
-card.className="product-card"
-
-card.innerHTML=`
-<img src="${img}" class="product-image">
-<div class="product-info">
-<div class="product-name">${p.name}</div>
-<div class="product-category">${p.category}</div>
-<div class="product-price">₹${p.price}</div>
-</div>
-`
+card.innerHTML = `
+  <img src="${img}" class="product-image">
+  <div class="product-info">
+      <div class="product-name">${p.name}</div>
+      <div class="product-category">${p.category}</div>
+      <div class="product-price">₹${p.price}</div>
+  </div>
+`;
 
 productGrid.appendChild(card)
 
