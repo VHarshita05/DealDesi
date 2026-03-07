@@ -700,6 +700,11 @@ if (p.images) {
   try {
     const arr = JSON.parse(p.images.replace(/'/g,'"'));
     img = arr[0];
+
+    if (img && img.startsWith("//")) {
+      img = "https:" + img;
+    }
+
   } catch {
     img = p.images;
   }
