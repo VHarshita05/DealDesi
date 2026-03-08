@@ -174,14 +174,18 @@ let img = "https://via.placeholder.com/400x600";
 
 if (p.images) {
 
-  const start = p.images.indexOf("https://");
-  const end = p.images.indexOf("',", start);
+  const urlMatch = p.images.match(/https:\/\/images\.asos-media\.com\/[^']+/);
 
-  if (start !== -1) {
-    img = p.images.substring(start, end > start ? end : p.images.length);
+  if (urlMatch) {
+
+    img = urlMatch[0];
+
+    // remove resizing parameters
+    if (img.includes("?")) {
+      img = img.split("?")[0];
+    }
+
   }
-
-}
 
 }
 const card = document.createElement("div");
