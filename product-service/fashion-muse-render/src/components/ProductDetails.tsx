@@ -58,7 +58,27 @@ const ProductDetails = () => {
   const colors = product.color?.split(",") || ["Black", "White", "Maroon"];
   const sizes = product.size?.split(",") || ["XS", "S", "M", "L", "XL"];
 
-  return (
+  const addToCart = async (product: any) => {
+
+  await fetch(
+    "https://dealdesi-cart-service.onrender.com/cart",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: product.name,
+        price: Number(product.price),
+        image: product.image
+      })
+    }
+  );
+
+  alert("Added to cart");
+
+};
+return (
 
     <div style={{ padding: "20px" }}>
 
@@ -202,17 +222,11 @@ const ProductDetails = () => {
           </div>
 
           <button
-            style={{
-              width: "100%",
-              padding: "14px",
-              marginTop: "15px",
-              border: "1px solid black",
-              background: "#fff",
-              cursor: "pointer"
-            }}
-          >
-            Add to cart
-          </button>
+  onClick={() => addToCart(product)}
+  className="bg-black text-white px-6 py-3 rounded mt-6"
+>
+Add to Cart
+</button>
 
           <button
             style={{

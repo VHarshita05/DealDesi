@@ -16,6 +16,35 @@ const TrendingProducts = () => {
       .catch(err => console.error("Fetch error:", err));
   }, []);
 
+const addToCart = async (product: any) => {
+  try {
+
+    const response = await fetch(
+      "https://dealdesi-cart-service.onrender.com/cart",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: product.name,
+          price: Number(product.price),
+          image: product.image
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("Cart API response:", data);
+
+    alert("Added to cart");
+
+  } catch (err) {
+    console.error("Cart API error:", err);
+  }
+};
+
   return (
     <section className="px-8 py-12">
 
@@ -48,14 +77,14 @@ const TrendingProducts = () => {
 </p>
 
             <button
-              onClick={(e) => {
-                e.stopPropagation(); // 👈 prevents navigation when clicking cart
-                alert("Added to cart");
-              }}
-              className="bg-black text-white px-4 py-2 mt-3 rounded w-full"
-            >
-              Add to Cart
-            </button>
+  onClick={(e) => {
+    e.stopPropagation();
+    addToCart(product);
+  }}
+  className="bg-black text-white px-4 py-2 mt-3 rounded w-full"
+>
+Add to Cart
+</button>
 
           </div>
 
