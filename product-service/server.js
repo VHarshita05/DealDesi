@@ -1,7 +1,7 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const csv = require('csv-parser');
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const csv = require("csv-parser");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,13 +11,15 @@ app.use(express.json());
 /* -----------------------------
    SERVE REACT BUILD
 ------------------------------*/
-const frontendPath = path.join(__dirname, "./fashion-muse-render/dist");
+
+const frontendPath = path.join(__dirname, "fashion-muse-render", "dist");
+
 app.use(express.static(frontendPath));
-app.use("/assets", express.static(path.join(frontendPath, "assets")));
 
 /* -----------------------------
    LOAD PRODUCTS FROM CSV
 ------------------------------*/
+
 let products = [];
 const csvPath = path.join(__dirname, "products.csv");
 
@@ -34,14 +36,12 @@ if (fs.existsSync(csvPath)) {
   fs.createReadStream(csvPath)
     .pipe(csv())
     .on("data", (row) => {
-
       const image = extractFirstImage(row.images);
 
       products.push({
         ...row,
-        image: image
+        image: image,
       });
-
     })
     .on("end", () => {
       console.log(`Loaded ${products.length} products`);
@@ -57,7 +57,6 @@ app.get("/products", (req, res) => {
 });
 
 app.get("/products/:id", (req, res) => {
-
   const id = parseInt(req.params.id);
 
   if (isNaN(id) || id < 0 || id >= products.length) {
@@ -65,8 +64,6 @@ app.get("/products/:id", (req, res) => {
   }
 
   res.json(products[id]);
-
-
 });
 
 app.get("/health", (req, res) => {
@@ -77,9 +74,10 @@ app.get("/health", (req, res) => {
    REACT ROUTER FALLBACK
 ------------------------------*/
 
-app.use((req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
+
 /* -----------------------------
    START SERVER
 ------------------------------*/
