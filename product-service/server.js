@@ -4,7 +4,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
@@ -75,8 +75,8 @@ app.get("/health", (req, res) => {
    REACT ROUTER FALLBACK
 ------------------------------*/
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
+app.use('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 /* -----------------------------
