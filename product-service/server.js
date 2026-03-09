@@ -8,82 +8,69 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Serve React build
-app.use(express.static(path.join(__dirname, 'fashion-muse-render', 'dist')));
+/* -----------------------------
+   SERVE REACT BUILD
+------------------------------*/
+const frontendPath = path.join(__dirname, "fashion-muse-render", "dist");
+app.use(express.static(frontendPath));
 
-// Store products
+/* -----------------------------
+   LOAD PRODUCTS FROM CSV
+------------------------------*/
 let products = [];
+const csvPath = path.join(__dirname, "products.csv");
 
-// CSV path
-const csvPath = path.join(__dirname, 'products.csv');
-
-/*
- Extract first valid ASOS image from messy CSV string
-*/
 function extractFirstImage(imagesField) {
-
   if (!imagesField) return null;
 
   const match = imagesField.match(/https:\/\/images\.asos-media\.com\/[^',\]]+/);
-
   if (!match) return null;
 
-  // remove query params
-  return match[0].split('?')[0];
+  return match[0].split("?")[0];
 }
 
-
-// Load CSV
 if (fs.existsSync(csvPath)) {
-
   fs.createReadStream(csvPath)
     .pipe(csv())
-    .on('data', (row) => {
+    .on("data", (row) => {
 
       const image = extractFirstImage(row.images);
 
-      const product = {
+      products.push({
         ...row,
         image: image
-      };
+      });
 
-      products.push(product);
     })
-
-    .on('end', () => {
-      console.log(`Loaded ${products.length} products from CSV`);
-    })
-
-    .on('error', (err) => {
-      console.error("CSV Read Error:", err);
+    .on("end", () => {
+      console.log(`Loaded ${products.length} products`);
     });
-
-} else {
-
-  console.error("products.csv not found at:", csvPath);
-
 }
 
+/* -----------------------------
+   API
+------------------------------*/
 
-// Health check
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
-
-
-// Homepage
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'fashion-muse-render', 'dist', 'index.html'));
-});
-
-
-// Product API
-app.get('/products', (req, res) => {
+app.get("/products", (req, res) => {
   res.json(products);
 });
 
+app.get("/health", (req, res) => {
+  res.send("OK");
+});
 
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Product Catalog running on port ${PORT}`);
+/* -----------------------------
+   REACT ROUTING
+------------------------------*/
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
+
+/* -----------------------------
+   START SERVER
+------------------------------*/
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
