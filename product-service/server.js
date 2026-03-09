@@ -12,16 +12,40 @@ app.use(express.json());
 // Serve frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Load products from CSV
+// Store products
 let products = [];
 
+// CSV path
 const csvPath = path.join(__dirname, 'products.csv');
 
+/*
+  Extract first valid ASOS image from the messy CSV string
+*/
+function extractFirstImage(imagesField) {
+  if (!imagesField) return null;
+
+  const match = imagesField.match(/https:\/\/images\.asos-media\.com\/[^',\]]+/);
+
+  if (!match) return null;
+
+  // remove query params like ?$n_1920w$&wid=...
+  return match[0].split('?')[0];
+}
+
+// Load CSV
 if (fs.existsSync(csvPath)) {
   fs.createReadStream(csvPath)
     .pipe(csv())
     .on('data', (row) => {
-      products.push(row);
+
+      const image = extractFirstImage(row.images);
+
+      const product = {
+        ...row,
+        image: image
+      };
+
+      products.push(product);
     })
     .on('end', () => {
       console.log(`Loaded ${products.length} products from CSV`);
@@ -29,11 +53,12 @@ if (fs.existsSync(csvPath)) {
     .on('error', (err) => {
       console.error("CSV Read Error:", err);
     });
+
 } else {
   console.error("products.csv not found at:", csvPath);
 }
 
-// Health check (for Render / Load Balancer)
+// Health check
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
