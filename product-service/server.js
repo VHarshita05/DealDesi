@@ -1,67 +1,19 @@
-const express = require("express");
-const path = require("path");
-const fs = require("fs");
-const csv = require("csv-parser");
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-
 app.use(express.json());
 
-/* -----------------------------
-   SERVE REACT BUILD
-------------------------------*/
+/* SERVE FRONTEND */
+const frontendPath = path.join(__dirname, "fashion-muse-render", "dist");
+app.use(express.static(frontendPath));
 
-app.get("/", (req, res) => {
-  res.send("DealDesi Product API Running 🚀");
-});
-/* -----------------------------
-   LOAD PRODUCTS FROM CSV
-------------------------------*/
-
-let products = [];
-const csvPath = path.join(__dirname, "products.csv");
-
-function extractFirstImage(imagesField) {
-  if (!imagesField) return null;
-
-  const match = imagesField.match(/https:\/\/images\.asos-media\.com\/[^',\]]+/);
-  if (!match) return null;
-
-  return match[0].split("?")[0];
-}
-
-if (fs.existsSync(csvPath)) {
-  fs.createReadStream(csvPath)
-    .pipe(csv())
-    .on("data", (row) => {
-      const image = extractFirstImage(row.images);
-
-      products.push({
-        ...row,
-        image: image,
-      });
-    })
-    .on("end", () => {
-      console.log(`Loaded ${products.length} products`);
-    });
-}
-
-/* -----------------------------
-   API ROUTES
-------------------------------*/
-
+/* API ROUTES */
 app.get("/products", (req, res) => {
   res.json(products);
 });
 
 app.get("/products/:id", (req, res) => {
   const id = parseInt(req.params.id);
-
   if (isNaN(id) || id < 0 || id >= products.length) {
     return res.status(404).json({ error: "Product not found" });
   }
-
   res.json(products[id]);
 });
 
@@ -69,11 +21,12 @@ app.get("/health", (req, res) => {
   res.send("OK");
 });
 
+/* FRONTEND FALLBACK */
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
 
-/* -----------------------------
-   START SERVER
-------------------------------*/
-
+/* START SERVER */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
