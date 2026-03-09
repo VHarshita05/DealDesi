@@ -6,11 +6,10 @@ const csv = require('csv-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 
-// Serve frontend from fashion-muse-render
-app.use(express.static(path.join(__dirname, 'fashion-muse-render')));
+// Serve React build
+app.use(express.static(path.join(__dirname, 'fashion-muse-render', 'dist')));
 
 // Store products
 let products = [];
@@ -74,7 +73,7 @@ app.get('/health', (req, res) => {
 
 // Homepage
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'fashion-muse-render', 'index.html'));
+  res.sendFile(path.join(__dirname, 'fashion-muse-render', 'dist', 'index.html'));
 });
 
 
