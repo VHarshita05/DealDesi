@@ -12,11 +12,9 @@ app.use(express.json());
    SERVE REACT BUILD
 ------------------------------*/
 
-const frontendPath = path.join(__dirname, "fashion-muse-render", "dist");
-
-app.use(express.static(frontendPath));
-app.use("/assets", express.static(path.join(frontendPath, "assets")));
-
+app.get("/", (req, res) => {
+  res.send("DealDesi Product API Running 🚀");
+});
 /* -----------------------------
    LOAD PRODUCTS FROM CSV
 ------------------------------*/
@@ -71,13 +69,6 @@ app.get("/health", (req, res) => {
   res.send("OK");
 });
 
-/* -----------------------------
-   REACT ROUTER FALLBACK
-------------------------------*/
-
-app.use((req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
-});
 
 /* -----------------------------
    START SERVER
