@@ -13,6 +13,7 @@ app.use(express.json());
 ------------------------------*/
 const frontendPath = path.join(__dirname, "./fashion-muse-render/dist");
 app.use(express.static(frontendPath));
+app.use("/assets", express.static(path.join(frontendPath, "assets")));
 
 /* -----------------------------
    LOAD PRODUCTS FROM CSV
