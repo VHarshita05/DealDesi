@@ -1,16 +1,15 @@
-FROM node:18-alpine
+FROM node:18
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
-# Copy application source
-COPY server.js ./server.js
 COPY routes ./routes
 COPY db ./db
-COPY public ./public
 COPY products.csv ./products.csv
+COPY server.js ./server.js
+COPY fashion-muse-render ./fashion-muse-render
 
 EXPOSE 3000
 
