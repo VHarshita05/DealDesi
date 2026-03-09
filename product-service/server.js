@@ -48,7 +48,7 @@ if (fs.existsSync(csvPath)) {
 }
 
 /* -----------------------------
-   API
+   API ROUTES
 ------------------------------*/
 
 app.get("/products", (req, res) => {
@@ -72,19 +72,17 @@ app.get("/health", (req, res) => {
 });
 
 /* -----------------------------
-   REACT ROUTING
+   REACT ROUTER FALLBACK
 ------------------------------*/
 
-app.use((req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
-});
-/* -----------------------------
-   START SERVER
-------------------------------*/
-// React Router fallback
 app.get("*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
+
+/* -----------------------------
+   START SERVER
+------------------------------*/
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
