@@ -65,6 +65,7 @@ app.get("/products/:id", (req, res) => {
 
   res.json(products[id]);
 
+
 });
 
 app.get("/health", (req, res) => {
