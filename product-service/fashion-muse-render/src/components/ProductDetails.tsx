@@ -26,14 +26,16 @@ const ProductDetails = () => {
         setProduct(p);
 
         // Load images
-        if (p.image_url) {
-          try {
-            const imgs = JSON.parse(p.image_url.replace(/'/g, '"'));
-            setImages(imgs);
-          } catch {
-            setImages([]);
-          }
-        }
+if (p.images) {
+  try {
+    const imgs = JSON.parse(p.images.replace(/'/g, '"'));
+    setImages(imgs);
+  } catch {
+    setImages([p.image]);
+  }
+} else {
+  setImages([p.image]);
+}
 
       } catch (err) {
         console.error("Product load error:", err);
@@ -139,12 +141,12 @@ return (
           <div style={{ margin: "10px 0" }}>
 
             <span style={{ textDecoration: "line-through", color: "#999", marginRight: "10px" }}>
-              ₹{Math.round(product.discounted_price * 1.5)}
+              ${Math.round(Number(product.price) * 1.5)}
             </span>
 
-            <span style={{ fontSize: "22px", fontWeight: 700 }}>
-              ₹{product.discounted_price}
-            </span>
+           <span style={{ fontSize: "22px", fontWeight: 700 }}>
+  ${Number(product.price)}
+</span>
 
             <span
               style={{
