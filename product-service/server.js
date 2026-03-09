@@ -15,7 +15,7 @@ app.use(express.json());
 const frontendPath = path.join(__dirname, "fashion-muse-render", "dist");
 
 app.use(express.static(frontendPath));
-app.use("/assets", express.static(path.join(frontendPath, "assets")));
+
 /* -----------------------------
    LOAD PRODUCTS FROM CSV
 ------------------------------*/
@@ -74,9 +74,10 @@ app.get("/health", (req, res) => {
    REACT ROUTER FALLBACK
 ------------------------------*/
 
-app.get(/^\/(?!api|products|assets).*/, (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
+
 /* -----------------------------
    START SERVER
 ------------------------------*/
