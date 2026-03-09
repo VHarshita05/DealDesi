@@ -76,10 +76,9 @@ app.get("/health", (req, res) => {
    REACT ROUTER FALLBACK
 ------------------------------*/
 
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
-
 /* -----------------------------
    START SERVER
 ------------------------------*/
