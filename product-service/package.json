@@ -1,24 +1,13 @@
 {
-  "name": "product-catalog",
+  "name": "dealdesi-product-service",
   "version": "1.0.0",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "csv-parser": "^3.2.0",
-    "express": "^5.2.1",
-    "pg": "^8.16.3"
-  }
-}
-{
-  "scripts": {
-    "start": "node server.js",
-    "build": "cd fashion-muse-render && npm install && npm run build"
+    "csv-parser": "^3.0.0",
+    "express": "^4.18.2"
   }
 }
