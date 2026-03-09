@@ -17,12 +17,11 @@ const Index = () => {
       {/* HERO SECTION */}
       <HeroBanner />
 
-      {/* TRENDING SECTION */}
-      <TrendingProducts />
-
       {/* SHOP BY CATEGORY */}
       <CategoryGrid />
 
+      {/* PRODUCTS */}
+      <TrendingProducts />
 
       {/* FEATURES */}
       <FeatureStrip />
