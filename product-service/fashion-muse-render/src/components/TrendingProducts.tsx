@@ -40,10 +40,12 @@ const TrendingProducts = () => {
             />
 
             <h3 className="mt-3 font-semibold">
-              {product.product_name}
-            </h3>
+  {product.name}
+</h3>
 
-            <p className="price">${product.price}</p>
+           <p className="text-lg font-bold mt-1">
+  ${Number(product.price)}
+</p>
 
             <button
               onClick={(e) => {
