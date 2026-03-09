@@ -43,9 +43,7 @@ const TrendingProducts = () => {
               {product.product_name}
             </h3>
 
-            <p className="text-orange-600 font-bold">
-              ₹{product.discounted_price}
-            </p>
+            <p className="price">${product.price}</p>
 
             <button
               onClick={(e) => {
