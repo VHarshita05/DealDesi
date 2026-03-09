@@ -69,9 +69,8 @@ app.get("/products/:id", (req, res) => {
 app.get("/health", (req, res) => {
   res.send("OK");
 });
-
 /* -----------------------------
-   FRONTEND ROUTE (Homepage)
+   FRONTEND ROUTE
 ------------------------------*/
 
 app.get("/", (req, res) => {
@@ -82,7 +81,7 @@ app.get("/", (req, res) => {
    REACT ROUTER FALLBACK
 ------------------------------*/
 
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
