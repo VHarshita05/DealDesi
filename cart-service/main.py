@@ -1,20 +1,29 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# temporary cart storage
-cart_items = []
+cart = []
 
-class CartItem(BaseModel):
-    product_id: int
-    quantity: int
-
-@app.post("/cart/add")
-def add_to_cart(item: CartItem):
-    cart_items.append(item)
-    return {"message": "Item added to cart", "cart": cart_items}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/cart")
 def get_cart():
-    return {"cart": cart_items}
+    return cart
+
+
+@app.post("/cart")
+def add_to_cart(product: dict):
+    cart.append(product)
+    return {"message": "Product added to cart", "cart": cart}
+
+
+@app.delete("/cart/{index}")
+def remove_from_cart(index: int):
+    cart.pop(index)
+    return {"message": "Item removed"}
