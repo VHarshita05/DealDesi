@@ -69,7 +69,10 @@ app.use((req, res) => {
 /* -----------------------------
    START SERVER
 ------------------------------*/
-
+// React Router fallback
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
