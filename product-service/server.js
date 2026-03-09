@@ -9,11 +9,10 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 /* -----------------------------
-   SERVE FRONTEND BUILD
+   SERVE FRONTEND
 ------------------------------*/
 
 const frontendPath = path.join(__dirname, "fashion-muse-render", "dist");
-
 app.use(express.static(frontendPath));
 
 /* -----------------------------
@@ -69,6 +68,7 @@ app.get("/products/:id", (req, res) => {
 app.get("/health", (req, res) => {
   res.send("OK");
 });
+
 /* -----------------------------
    FRONTEND ROUTE
 ------------------------------*/
