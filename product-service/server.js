@@ -11,7 +11,7 @@ app.use(express.json());
 /* -----------------------------
    SERVE REACT BUILD
 ------------------------------*/
-const frontendPath = path.join(__dirname, "fashion-muse-render", "dist");
+const frontendPath = path.join(__dirname, "./fashion-muse-render/dist");
 app.use(express.static(frontendPath));
 
 /* -----------------------------
