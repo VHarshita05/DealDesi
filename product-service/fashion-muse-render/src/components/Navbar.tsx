@@ -1,6 +1,7 @@
 import { Search, Heart, ShoppingBag, User, MapPin } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
+import { Link } from "react-router-dom";
 
 const navLinks = ["MEN", "WOMEN", "HOME", "GENZ"];
 
@@ -18,15 +19,15 @@ const Navbar = () => {
 
         {/* Nav links */}
         <div className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <a
-              key={link}
-              href="#"
-              className="px-3 py-2 text-sm font-semibold tracking-wide text-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200"
-            >
-              {link}
-            </a>
-          ))}
+         {navLinks.map((link) => (
+  <Link
+    key={link}
+    to={`/${link.toLowerCase()}`}
+    className="px-3 py-2 text-sm font-semibold tracking-wide text-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200"
+  >
+    {link}
+  </Link>
+))}
         </div>
 
         {/* Search */}

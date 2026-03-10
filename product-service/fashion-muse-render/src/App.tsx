@@ -6,6 +6,7 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
 import Cart from "./pages/Cart";
 import Index from "./pages/Index";
+import Women from "./pages/Women";
 import NotFound from "./pages/NotFound";
 import ProductDetails from "./components/ProductDetails";   // 👈 added
 
@@ -26,6 +27,8 @@ const App = () => (
           
               {/* Cart page */}
     <Route path="/cart" element={<Cart />} />
+          
+          <Route path="/women" element={<Women />} />
 
           {/* CATCH ALL ROUTE */}
           <Route path="*" element={<NotFound />} />
