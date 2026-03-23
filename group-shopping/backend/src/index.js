@@ -161,7 +161,7 @@ export default function GroupPage() {
 
   if (screen === "room") {
     return (
-      <div style={{ padding: 20 }}>
+      <div >
         <h2>Room Code: {room?.code}</h2>
 
         <div style={{ border: "1px solid gray", height: 200, overflow: "auto" }}>
