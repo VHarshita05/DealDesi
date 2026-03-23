@@ -1,213 +1,199 @@
-/**
- * DealDesi — Group Shopping Microservice
- * ────────────────────────────────────────
- * Express REST  : room CRUD
- * Socket.io     : real-time chat, cart sync, member presence
- *
- * Deploy on Render as a Web Service (Node environment).
- * Set env vars: PORT, FRONTEND_URL
- */
+import { useState, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 
-require("dotenv").config();
-const express    = require("express");
-const http       = require("http");
-const { Server } = require("socket.io");
-const cors       = require("cors");
-const { v4: uuidv4 } = require("uuid");
+const API_URL = "https://dealdesi.onrender.com";
 
-const PORT         = process.env.PORT || 4000;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+export default function GroupPage() {
+  const [screen, setScreen] = useState("home");
+  const [room, setRoom] = useState(null);
+  const [rid, setRid] = useState(null);
 
-/* ── In-memory store (swap for Redis / MongoDB for production) ── */
-const rooms = {};   // roomId → room object
+  const [myName, setMyName] = useState("");
+  const [joinCode, setJoinCode] = useState("");
+  const [chatTxt, setChatTxt] = useState("");
 
-/* ── Helpers ────────────────────────────────────────────────── */
-function genCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-}
+  const socket = useRef(null);
 
-function ensureUniqueCode() {
-  let code;
-  const existing = new Set(Object.values(rooms).map(r => r.code));
-  do { code = genCode(); } while (existing.has(code));
-  return code;
-}
+  /* 🔥 CONNECT SOCKET */
+  useEffect(() => {
+    socket.current = io(API_URL);
+    return () => socket.current.disconnect();
+  }, []);
 
-/* ── Express app ────────────────────────────────────────────── */
-const app = express();
+  /* 🔥 CREATE ROOM */
+  const doCreate = async () => {
+    const res = await fetch(`${API_URL}/rooms`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "Group Shopping",
+        hostName: myName
+      })
+    });
 
-app.use(cors({ origin: FRONTEND_URL, methods: ["GET","POST","DELETE"] }));
-app.use(express.json());
-
-// Health check — Render pings this to keep the service alive
-app.get("/health", (_req, res) => res.json({ status: "ok", rooms: Object.keys(rooms).length }));
-
-/* ─── REST: Create Room ─── */
-app.post("/rooms", (req, res) => {
-  const { name, theme, maxMembers, hostName, hostAvatar } = req.body;
-  if (!name || !hostName) return res.status(400).json({ error: "name and hostName required" });
-
-  const id   = uuidv4();
-  const code = ensureUniqueCode();
-  const room = {
-    id,
-    code,
-    name,
-    theme:      theme      || { label: "Festive Shopping", emoji: "🪔", accent: "#c0392b" },
-    maxMembers: Math.min(Math.max(parseInt(maxMembers) || 10, 2), 20),
-    host:       hostName,
-    createdAt:  Date.now(),
-    members:    [{ name: hostName, avatar: hostAvatar || "✨", joinedAt: Date.now() }],
-    cart:       [],
-    messages:   [
-      { id: uuidv4(), type: "system", text: `${hostName} created the room 🎉`,        ts: Date.now()     },
-      { id: uuidv4(), type: "system", text: `Share invite code ${code} with friends`, ts: Date.now() + 1 },
-    ],
+    const data = await res.json();
+    setRid(data.id);
+    setRoom(data);
+    setScreen("room");
   };
 
-  rooms[id] = room;
-  console.log(`[ROOM CREATED] "${name}" id=${id} code=${code}`);
-  res.status(201).json(room);
-});
+  /* 🔥 JOIN ROOM */
+  const doJoin = async () => {
+    const res = await fetch(`${API_URL}/rooms/by-code/${joinCode}`);
+    if (!res.ok) return alert("Room not found");
 
-/* ─── REST: Get Room by invite code ─── */
-app.get("/rooms/by-code/:code", (req, res) => {
-  const room = Object.values(rooms).find(r => r.code === req.params.code.toUpperCase());
-  if (!room) return res.status(404).json({ error: "Room not found" });
-  res.json(room);
-});
+    const data = await res.json();
+    setRid(data.id);
+    setRoom(data);
+    setScreen("room");
+  };
 
-/* ─── REST: Get Room by id ─── */
-app.get("/rooms/:id", (req, res) => {
-  const room = rooms[req.params.id];
-  if (!room) return res.status(404).json({ error: "Room not found" });
-  res.json(room);
-});
+  /* 🔥 JOIN SOCKET ROOM */
+  useEffect(() => {
+    if (!rid || !socket.current) return;
 
-/* ─── REST: List all rooms (debug/admin) ─── */
-app.get("/rooms", (_req, res) => {
-  res.json(Object.values(rooms).map(r => ({
-    id: r.id, code: r.code, name: r.name,
-    members: r.members.length, max: r.maxMembers,
-    createdAt: r.createdAt,
-  })));
-});
+    socket.current.emit("join-room", {
+      roomId: rid,
+      userName: myName,
+      userAvatar: "🙂"
+    }, (res) => {
+      if (res?.error) alert(res.error);
+      else setRoom(res.room);
+    });
 
-/* ── Socket.io ──────────────────────────────────────────────── */
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: FRONTEND_URL, methods: ["GET","POST"] },
-});
+  }, [rid]);
 
-io.on("connection", socket => {
-  console.log(`[SOCKET] connected: ${socket.id}`);
+  /* 🔥 RECEIVE EVENTS */
+  useEffect(() => {
+    if (!socket.current) return;
 
-  /* ── join-room ── */
-  socket.on("join-room", ({ roomId, userName, userAvatar }, cb) => {
-    const room = rooms[roomId];
-    if (!room) return cb?.({ error: "Room not found" });
-    if (room.members.length >= room.maxMembers && !room.members.find(m => m.name === userName))
-      return cb?.({ error: "Room is full" });
+    socket.current.on("new-message", (msg) => {
+      setRoom(prev => ({
+        ...prev,
+        messages: [...(prev?.messages || []), msg]
+      }));
+    });
 
-    // Add member if not already in
-    if (!room.members.find(m => m.name === userName)) {
-      room.members.push({ name: userName, avatar: userAvatar || "✨", joinedAt: Date.now() });
-      const sysMsg = { id: uuidv4(), type: "system", text: `${userAvatar} ${userName} joined ✨`, ts: Date.now() };
-      room.messages.push(sysMsg);
-      socket.to(roomId).emit("member-joined", { member: room.members.at(-1), message: sysMsg });
-    }
+    socket.current.on("cart-updated", ({ cart }) => {
+      setRoom(prev => ({ ...prev, cart }));
+    });
 
-    socket.join(roomId);
-    socket.data.roomId   = roomId;
-    socket.data.userName = userName;
+    socket.current.on("member-joined", ({ member }) => {
+      setRoom(prev => ({
+        ...prev,
+        members: [...prev.members, member]
+      }));
+    });
 
-    console.log(`[JOIN] ${userName} → room ${roomId}`);
-    cb?.({ room });
-  });
+    socket.current.on("member-left", ({ userName }) => {
+      setRoom(prev => ({
+        ...prev,
+        members: prev.members.filter(m => m.name !== userName)
+      }));
+    });
 
-  /* ── send-message (text) ── */
-  socket.on("send-message", ({ roomId, text, sender, avatar }, cb) => {
-    const room = rooms[roomId];
-    if (!room) return cb?.({ error: "Room not found" });
+  }, []);
 
-    const msg = { id: uuidv4(), type: "text", sender, avatar, text, ts: Date.now() };
-    room.messages.push(msg);
+  /* 🔥 SEND MESSAGE */
+  const sendText = () => {
+    if (!chatTxt.trim()) return;
 
-    io.to(roomId).emit("new-message", msg);
-    cb?.({ ok: true });
-  });
+    socket.current.emit("send-message", {
+      roomId: rid,
+      text: chatTxt,
+      sender: myName,
+      avatar: "🙂"
+    });
 
-  /* ── share-product (product card in chat) ── */
-  socket.on("share-product", ({ roomId, product, sender, avatar }, cb) => {
-    const room = rooms[roomId];
-    if (!room) return cb?.({ error: "Room not found" });
+    setChatTxt("");
+  };
 
-    const msg = { id: uuidv4(), type: "product", sender, avatar, product, ts: Date.now() };
-    room.messages.push(msg);
+  /* 🔥 SHARE PRODUCT */
+  const shareProduct = () => {
+    socket.current.emit("share-product", {
+      roomId: rid,
+      product: { name: "Demo Product", price: 999 },
+      sender: myName,
+      avatar: "🙂"
+    });
+  };
 
-    io.to(roomId).emit("new-message", msg);
-    cb?.({ ok: true });
-  });
+  /* 🔥 ADD TO CART */
+  const addToCart = () => {
+    socket.current.emit("toggle-cart", {
+      roomId: rid,
+      product: { id: 1, name: "Item", price: 500 },
+      userName: myName
+    });
+  };
 
-  /* ── toggle-cart ── */
-  socket.on("toggle-cart", ({ roomId, product, userName }, cb) => {
-    const room = rooms[roomId];
-    if (!room) return cb?.({ error: "Room not found" });
+  /* ================= UI ================= */
 
-    const idx = room.cart.findIndex(p => p.id === product.id);
-    let action;
-    if (idx === -1) {
-      room.cart.push(product);
-      action = "added";
-      const sysMsg = { id: uuidv4(), type: "system", text: `${userName} added "${product.name}" to the group cart 🛒`, ts: Date.now() };
-      room.messages.push(sysMsg);
-      io.to(roomId).emit("new-message", sysMsg);
-    } else {
-      room.cart.splice(idx, 1);
-      action = "removed";
-    }
+  if (screen === "home") {
+    return (
+      <div style={{ padding: 40 }}>
+        <h2>Group Shopping</h2>
 
-    io.to(roomId).emit("cart-updated", { cart: room.cart });
-    cb?.({ ok: true, action, cart: room.cart });
-  });
+        <input
+          placeholder="Enter name"
+          value={myName}
+          onChange={(e) => setMyName(e.target.value)}
+        />
 
-  /* ── leave-room ── */
-  socket.on("leave-room", ({ roomId, userName }) => {
-    const room = rooms[roomId];
-    if (!room) return;
+        <br /><br />
 
-    room.members = room.members.filter(m => m.name !== userName);
-    socket.leave(roomId);
+        <button onClick={doCreate}>Create Room</button>
 
-    const sysMsg = { id: uuidv4(), type: "system", text: `${userName} left the room`, ts: Date.now() };
-    room.messages.push(sysMsg);
-    io.to(roomId).emit("member-left",  { userName });
-    io.to(roomId).emit("new-message",  sysMsg);
+        <br /><br />
 
-    console.log(`[LEAVE] ${userName} ← room ${roomId}`);
-  });
+        <input
+          placeholder="Enter Code"
+          value={joinCode}
+          onChange={(e) => setJoinCode(e.target.value)}
+        />
 
-  /* ── disconnect ── */
-  socket.on("disconnect", () => {
-    const { roomId, userName } = socket.data;
-    if (roomId && userName) {
-      const room = rooms[roomId];
-      if (room) {
-        room.members = room.members.filter(m => m.name !== userName);
-        const sysMsg = { id: uuidv4(), type: "system", text: `${userName} disconnected`, ts: Date.now() };
-        room.messages.push(sysMsg);
-        io.to(roomId).emit("member-left", { userName });
-        io.to(roomId).emit("new-message", sysMsg);
-      }
-    }
-    console.log(`[SOCKET] disconnected: ${socket.id}`);
-  });
-});
+        <button onClick={doJoin}>Join Room</button>
+      </div>
+    );
+  }
 
-/* ── Start ──────────────────────────────────────────────────── */
-server.listen(PORT, () => {
-  console.log(`\n🛍  DealDesi Group Shopping backend`);
-  console.log(`   Listening on http://localhost:${PORT}`);
-  console.log(`   CORS allowed for: ${FRONTEND_URL}\n`);
-});
+  if (screen === "room") {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>Room Code: {room?.code}</h2>
+
+        <div style={{ border: "1px solid gray", height: 200, overflow: "auto" }}>
+          {room?.messages?.map((m, i) => (
+            <div key={i}>
+              <b>{m.sender || "SYSTEM"}:</b> {m.text || JSON.stringify(m.product)}
+            </div>
+          ))}
+        </div>
+
+        <input
+          value={chatTxt}
+          onChange={(e) => setChatTxt(e.target.value)}
+        />
+
+        <button onClick={sendText}>Send</button>
+
+        <br /><br />
+
+        <button onClick={shareProduct}>Share Product</button>
+        <button onClick={addToCart}>Toggle Cart</button>
+
+        <h3>Members:</h3>
+        {room?.members?.map((m, i) => (
+          <div key={i}>{m.name}</div>
+        ))}
+
+        <h3>Cart:</h3>
+        {room?.cart?.map((c, i) => (
+          <div key={i}>{c.name}</div>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+}
