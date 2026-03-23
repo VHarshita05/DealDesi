@@ -52,15 +52,18 @@ export default function GroupPage() {
   useEffect(() => {
     if (!rid || !socket.current) return;
 
-    socket.current.emit("join-room", {
-      roomId: rid,
-      userName: myName,
-      userAvatar: "🙂"
-    }, (res) => {
-      if (res?.error) alert(res.error);
-      else setRoom(res.room);
-    });
-
+    socket.current.emit(
+      "join-room",
+      {
+        roomId: rid,
+        userName: myName,
+        userAvatar: "🙂"
+      },
+      (res) => {
+        if (res?.error) alert(res.error);
+        else setRoom(res.room);
+      }
+    );
   }, [rid]);
 
   /* 🔥 RECEIVE EVENTS */
@@ -68,30 +71,29 @@ export default function GroupPage() {
     if (!socket.current) return;
 
     socket.current.on("new-message", (msg) => {
-      setRoom(prev => ({
+      setRoom((prev) => ({
         ...prev,
         messages: [...(prev?.messages || []), msg]
       }));
     });
 
     socket.current.on("cart-updated", ({ cart }) => {
-      setRoom(prev => ({ ...prev, cart }));
+      setRoom((prev) => ({ ...prev, cart }));
     });
 
     socket.current.on("member-joined", ({ member }) => {
-      setRoom(prev => ({
+      setRoom((prev) => ({
         ...prev,
-        members: [...prev.members, member]
+        members: [...(prev.members || []), member]
       }));
     });
 
     socket.current.on("member-left", ({ userName }) => {
-      setRoom(prev => ({
+      setRoom((prev) => ({
         ...prev,
-        members: prev.members.filter(m => m.name !== userName)
+        members: prev.members.filter((m) => m.name !== userName)
       }));
     });
-
   }, []);
 
   /* 🔥 SEND MESSAGE */
@@ -131,6 +133,7 @@ export default function GroupPage() {
 
   if (screen === "home") {
     return (
+      <div style={{ padding: 40 }}>
         <h2>Group Shopping</h2>
 
         <input
