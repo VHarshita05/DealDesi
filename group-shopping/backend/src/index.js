@@ -131,7 +131,6 @@ export default function GroupPage() {
 
   if (screen === "home") {
     return (
-      <div style={{ padding: 40 }}>
         <h2>Group Shopping</h2>
 
         <input
