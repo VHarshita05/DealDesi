@@ -1,4 +1,4 @@
-import { Search, Heart, ShoppingBag, User, MapPin } from "lucide-react";
+import { Search, Heart, ShoppingBag, User, MapPin, Users } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ const Navbar = () => {
   return (
     <nav className="bg-background border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 flex items-center justify-between h-16 gap-2 md:gap-6">
+        
         {/* Logo */}
         <div className="flex items-center gap-3 shrink-0">
           <img src={logo} alt="DealDesi" className="h-10 w-10 object-contain" />
@@ -19,15 +20,15 @@ const Navbar = () => {
 
         {/* Nav links */}
         <div className="hidden lg:flex items-center gap-1">
-         {navLinks.map((link) => (
-  <Link
-    key={link}
-    to={`/${link.toLowerCase()}`}
-    className="px-3 py-2 text-sm font-semibold tracking-wide text-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200"
-  >
-    {link}
-  </Link>
-))}
+          {navLinks.map((link) => (
+            <Link
+              key={link}
+              to={`/${link.toLowerCase()}`}
+              className="px-3 py-2 text-sm font-semibold tracking-wide text-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200"
+            >
+              {link}
+            </Link>
+          ))}
         </div>
 
         {/* Search */}
@@ -44,6 +45,18 @@ const Navbar = () => {
 
         {/* Icons */}
         <div className="flex items-center gap-1">
+
+          {/* ✅ GROUP BUY ICON */}
+          <Link
+            to="/group"
+            className="flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg hover:bg-muted transition-colors group"
+          >
+            <Users size={20} className="text-foreground group-hover:text-primary transition-colors" />
+            <span className="text-[10px] font-medium text-muted-foreground group-hover:text-primary hidden sm:block">
+              Group Buy
+            </span>
+          </Link>
+
           {[
             { icon: MapPin, label: "Location" },
             { icon: User, label: "Profile" },
@@ -55,12 +68,13 @@ const Navbar = () => {
               className="flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg hover:bg-muted transition-colors group"
             >
               <Icon size={20} className="text-foreground group-hover:text-primary transition-colors" />
-              <span className="text-[10px] font-medium text-muted-foreground group-hover:text-primary transition-colors hidden sm:block">
+              <span className="text-[10px] font-medium text-muted-foreground group-hover:text-primary hidden sm:block">
                 {label}
               </span>
             </button>
           ))}
         </div>
+
       </div>
     </nav>
   );
