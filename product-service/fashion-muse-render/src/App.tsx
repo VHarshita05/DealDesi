@@ -29,6 +29,7 @@ const App = () => (
     <Route path="/cart" element={<Cart />} />
           
           <Route path="/women" element={<Women />} />
+          <Route path="/group" element={<GroupPage />} />
 
           {/* CATCH ALL ROUTE */}
           <Route path="*" element={<NotFound />} />
