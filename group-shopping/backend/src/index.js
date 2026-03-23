@@ -52,8 +52,21 @@ app.get("/rooms/:id", (req, res) => {
 
 /* 🔥 GET ROOM BY CODE */
 app.get("/rooms/by-code/:code", (req, res) => {
-  const room = Object.values(rooms).find(r => r.code === req.params.code);
-  if (!room) return res.status(404).json({ error: "Room not found" });
+  const code = req.params.code.trim().toUpperCase();
+
+  console.log("JOIN CODE:", code);
+  console.log("ALL ROOMS:", rooms);
+
+  const room = Object.values(rooms).find(
+    r => r.code.toUpperCase() === code
+  );
+
+  if (!room) {
+    console.log("❌ Room not found");
+    return res.status(404).json({ error: "Room not found" });
+  }
+
+  console.log("✅ Room found:", room.code);
 
   res.json(room);
 });
