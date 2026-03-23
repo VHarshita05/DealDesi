@@ -3,8 +3,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import GroupPage from "./pages/GroupPage";
 
+import GroupPage from "./pages/GroupPage";
+import Navbar from "./components/Navbar";
 import Cart from "./pages/Cart";
 import Index from "./pages/Index";
 import Women from "./pages/Women";
@@ -36,6 +37,20 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
 
         </Routes>
+       <Routes>
+  <Route path="/" element={<Home />} />
+
+  {/* 🔥 ADD THIS */}
+  <Route
+    path="/group"
+    element={
+      <>
+        <Navbar />
+        <GroupPage />
+      </>
+    }
+  />
+</Routes>
       </Router>
     </TooltipProvider>
   </QueryClientProvider>
