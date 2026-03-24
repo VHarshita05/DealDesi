@@ -2,16 +2,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
 import GroupPage from "./pages/GroupPage";
 import Navbar from "./components/Navbar";
 import Cart from "./pages/Cart";
 import Index from "./pages/Index";
 import Women from "./pages/Women";
 import NotFound from "./pages/NotFound";
-import ProductDetails from "./components/ProductDetails";   // 👈 added
+import ProductDetails from "./components/ProductDetails";
 
 const queryClient = new QueryClient();
 
@@ -20,38 +19,26 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <Router>
-        <Routes>
 
+      <Router>
+        <Navbar /> {/* ✅ Navbar globally once */}
+
+        <Routes>
           <Route path="/" element={<Index />} />
 
-          {/* PRODUCT DETAILS PAGE */}
-          <Route path="/product/:id" element={<ProductDetails />} />   {/* 👈 added */}
-          
-              {/* Cart page */}
-    <Route path="/cart" element={<Cart />} />
-          
+          <Route path="/product/:id" element={<ProductDetails />} />
+
+          <Route path="/cart" element={<Cart />} />
+
           <Route path="/women" element={<Women />} />
+
+          {/* ✅ FIXED GROUP ROUTE */}
           <Route path="/group" element={<GroupPage />} />
 
-          {/* CATCH ALL ROUTE */}
           <Route path="*" element={<NotFound />} />
-
         </Routes>
-       <Routes>
-
-  {/* 🔥 ADD THIS */}
-  <Route
-    path="/group"
-    element={
-      <>
-        <Navbar />
-        <GroupPage />
-      </>
-    }
-  />
-</Routes>
       </Router>
+
     </TooltipProvider>
   </QueryClientProvider>
 );
