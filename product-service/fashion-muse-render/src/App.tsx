@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
+import { Navigate } from "react-router-dom";
 import GroupPage from "./pages/GroupPage";
 import Navbar from "./components/Navbar";
 import Cart from "./pages/Cart";
@@ -24,7 +25,7 @@ const App = () => (
         <Navbar /> {/* ✅ Navbar globally once */}
 
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Navigate to="/women" />} />
 
           <Route path="/product/:id" element={<ProductDetails />} />
 
