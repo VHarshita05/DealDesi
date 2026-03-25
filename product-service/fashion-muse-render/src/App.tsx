@@ -25,13 +25,13 @@ const App = () => (
         <Navbar /> {/* ✅ Navbar globally once */}
 
         <Routes>
-          <Route path="/" element={<Navigate to="/women" />} />
 
           <Route path="/product/:id" element={<ProductDetails />} />
 
           <Route path="/cart" element={<Cart />} />
 
-          <Route path="/women" element={<Women />} />
+          <Route path="/" element={<Index />} />
+<Route path="/women" element={<Women />} />
 
           {/* ✅ FIXED GROUP ROUTE */}
           <Route path="/group" element={<GroupPage />} />
