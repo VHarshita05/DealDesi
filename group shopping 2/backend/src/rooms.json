@@ -1,0 +1,157 @@
+{
+  "3bad8581-3d21-4584-ada4-1c9356471a36": {
+    "id": "3bad8581-3d21-4584-ada4-1c9356471a36",
+    "code": "AW9HTL",
+    "name": "Dinner",
+    "theme": {
+      "label": "Casual Haul",
+      "emoji": "👟",
+      "accent": "#e67e22"
+    },
+    "maxMembers": 3,
+    "host": "harshi",
+    "createdAt": 1774586494509,
+    "members": [
+      {
+        "name": "Ani",
+        "avatar": "🦁",
+        "joinedAt": 1774586523087
+      }
+    ],
+    "cart": [
+      {
+        "id": 3,
+        "name": "Crop Top",
+        "price": 499,
+        "orig": 799,
+        "emoji": "👚",
+        "tag": "GenZ",
+        "color": "#8e44ad"
+      }
+    ],
+    "messages": [
+      {
+        "id": "038b9346-f70d-45a4-ad22-45f2879f06d8",
+        "type": "system",
+        "text": "harshi created the room 🎉",
+        "ts": 1774586494509
+      },
+      {
+        "id": "635e1b44-245d-4ecc-a471-8b8f4fb9d8d4",
+        "type": "system",
+        "text": "Share invite code AW9HTL with friends!",
+        "ts": 1774586494510
+      },
+      {
+        "id": "ecafe03c-a011-4144-9eca-3b18d8f65889",
+        "type": "system",
+        "text": "🦁 Ani joined ✨",
+        "ts": 1774586523087
+      },
+      {
+        "id": "e8389b12-ed91-4315-9c4e-0b6ac0fd96ef",
+        "type": "text",
+        "sender": "harshi",
+        "avatar": "🍭",
+        "text": "hiii",
+        "ts": 1774586534476
+      },
+      {
+        "id": "cb957f1f-92dc-4989-b4c2-6a50af85b91c",
+        "type": "text",
+        "sender": "Ani",
+        "avatar": "🦁",
+        "text": "lets shop",
+        "ts": 1774586540398
+      },
+      {
+        "id": "f8fce3db-df1d-4770-b2e4-90e09a180888",
+        "type": "product",
+        "sender": "harshi",
+        "avatar": "🍭",
+        "product": {
+          "id": 1,
+          "name": "Linen Kurta Set",
+          "price": 899,
+          "orig": 1499,
+          "emoji": "👘",
+          "tag": "Women",
+          "color": "#c0392b"
+        },
+        "ts": 1774586550339
+      },
+      {
+        "id": "60d9e2e7-7a99-47f5-a70a-6e319ddd80af",
+        "type": "text",
+        "sender": "Ani",
+        "avatar": "🦁",
+        "text": "try more casual",
+        "ts": 1774586559576
+      },
+      {
+        "id": "b81224fb-2dc1-4c23-bafc-299b52f922ce",
+        "type": "product",
+        "sender": "harshi",
+        "avatar": "🍭",
+        "product": {
+          "id": 3,
+          "name": "Crop Top",
+          "price": 499,
+          "orig": 799,
+          "emoji": "👚",
+          "tag": "GenZ",
+          "color": "#8e44ad"
+        },
+        "ts": 1774586575774
+      },
+      {
+        "id": "a737605c-161a-407e-82b4-9f8fa3c06525",
+        "type": "text",
+        "sender": "Ani",
+        "avatar": "🦁",
+        "text": "yahh looks fine to me",
+        "ts": 1774586587191
+      },
+      {
+        "id": "9fef3741-3dd1-4d26-97a2-3395dd9aeb2c",
+        "type": "system",
+        "text": "🌿 mimi joined ✨",
+        "ts": 1774586610769
+      },
+      {
+        "id": "7c3382fa-bf49-4f1f-b347-4873b59f221f",
+        "type": "text",
+        "sender": "mimi",
+        "avatar": "🌿",
+        "text": "yaa  get this one",
+        "ts": 1774586671093
+      },
+      {
+        "id": "5e02e846-c42d-4f76-b2f2-e5eded82fe8f",
+        "type": "text",
+        "sender": "harshi",
+        "avatar": "🍭",
+        "text": "okayy got it",
+        "ts": 1774586680242
+      },
+      {
+        "id": "f21b11de-aee1-4878-8cfc-b63d32beaf05",
+        "type": "system",
+        "text": "harshi added \"Crop Top\" to the group cart 🛒",
+        "ts": 1774586685706
+      },
+      {
+        "id": "21ae2e1a-53a4-425c-9fb3-6a8a08a6854b",
+        "type": "system",
+        "text": "harshi disconnected",
+        "ts": 1774586720156
+      },
+      {
+        "id": "7fa69f4b-e6da-4acd-bf0f-87fa1e22a69c",
+        "type": "system",
+        "text": "mimi disconnected",
+        "ts": 1774586725742
+      }
+    ]
+  }
+}
