@@ -153,5 +153,40 @@
         "ts": 1774586725742
       }
     ]
+  },
+  "cb132018-52fb-4592-9b98-0a54782fbb7f": {
+    "id": "cb132018-52fb-4592-9b98-0a54782fbb7f",
+    "code": "J6QXQJ",
+    "name": "work",
+    "theme": {
+      "label": "Office Wear",
+      "emoji": "💼",
+      "accent": "#2980b9"
+    },
+    "maxMembers": 3,
+    "host": "Hari",
+    "createdAt": 1774593261204,
+    "members": [
+      {
+        "name": "Hari",
+        "avatar": "🎀",
+        "joinedAt": 1774593261204
+      }
+    ],
+    "cart": [],
+    "messages": [
+      {
+        "id": "bf9c958a-7dee-4a94-a1b1-b4228a4eff5b",
+        "type": "system",
+        "text": "Hari created the room 🎉",
+        "ts": 1774593261204
+      },
+      {
+        "id": "75a5b448-aef7-4464-8e02-14fff785b8c2",
+        "type": "system",
+        "text": "Share invite code J6QXQJ with friends!",
+        "ts": 1774593261205
+      }
+    ]
   }
 }

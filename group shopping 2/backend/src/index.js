@@ -64,7 +64,11 @@ const app = express();
 
 // Allow all origins — needed for Render free tier (frontend and backend on different domains)
 app.use(cors({
-  origin: true,   // reflects the request origin
+   origin: [
+    "http://localhost:8080",
+    "http://localhost:5173",
+    "https://dealdesi-frontend.onrender.com"
+  ],   // reflects the request origin
   methods: ["GET", "POST", "DELETE", "OPTIONS"],
   credentials: true,
 }));
@@ -147,7 +151,11 @@ app.delete("/rooms/:id", (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: true,
+    origin: [
+      "http://localhost:8080",
+      "http://localhost:5173",
+      "https://dealdesi-frontend.onrender.com"
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
