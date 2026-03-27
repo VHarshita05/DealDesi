@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+const BASE = "https://groupshopping.onrender.com";
 
 async function req(method, path, body) {
   const res = await fetch(`${BASE}${path}`, {
