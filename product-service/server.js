@@ -2,11 +2,22 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const csv = require("csv-parser");
-
+const cors = require('cors')
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+
+app.use(cors({
+  origin: [
+    'https://dealdesi-frontend.onrender.com',
+    'http://localhost:5173',
+    'http://localhost:3000',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}))
+app.options('*', cors())
 
 /* -----------------------------
    SERVE FRONTEND
@@ -84,6 +95,8 @@ app.get("/", (req, res) => {
 app.use((req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
+
+
 
 /* -----------------------------
    START SERVER

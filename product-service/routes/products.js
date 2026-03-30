@@ -1,10 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db/db");
-
+const cors = require('cors')
 // ------------------------------------
 // GET /products OR /products?page=1&limit=20
 // ------------------------------------
+
+app.use(cors({
+  origin: [
+    'https://dealdesi-frontend.onrender.com',
+    'http://localhost:5173',
+    'http://localhost:3000',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}))
+app.options('*', cors())
 router.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
