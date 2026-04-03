@@ -1,13 +1,71 @@
-// ProductCard.jsx
-const ProductCard = ({ product }) => {
+import { useNavigate } from "react-router-dom";
+
+type Product = {
+  id?: number | string;
+  name?: string;
+  price?: number | string;
+  image?: string;
+};
+
+const ProductCard = ({ product }: { product: Product }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (product.id) {
+      navigate(`/product/${product.id}`);
+    }
+  };
+
   return (
-    <div className="border rounded-xl p-3 shadow-sm">
-      <img src={product.image} className="w-full h-64 object-cover rounded-lg" />
+    <div
+      onClick={handleClick}
+      style={{
+        border: "1px solid #eee",
+        padding: "10px",
+        borderRadius: "8px",
+        background: "#fff",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        cursor: "pointer",
+      }}
+    >
+      {/* ✅ ONLY REAL IMAGE (no dummy) */}
+      <img
+        src={product.image}
+        alt={product.name}
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = "none";
+        }}
+        style={{
+          width: "100%",
+          height: "300px",
+          objectFit: "cover",
+          borderRadius: "6px",
+        }}
+      />
 
-      <h3 className="mt-2 font-medium">{product.name}</h3>
-      <p className="text-orange-600 font-bold">₹{product.price}</p>
+      {/* Name */}
+      <h4 style={{ margin: "10px 0 4px" }}>{product.name}</h4>
 
-      <button className="w-full mt-2 bg-black text-white py-2 rounded-lg">
+      {/* Price */}
+      <p style={{ fontWeight: "bold", color: "#c0392b" }}>
+        ₹{product.price}
+      </p>
+
+      {/* Add to Cart */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation(); // 🚀 prevents navigation
+          alert("Added to cart 🛒");
+        }}
+        style={{
+          marginTop: "10px",
+          width: "100%",
+          background: "black",
+          color: "white",
+          padding: "10px",
+          borderRadius: "6px",
+        }}
+      >
         Add to Cart
       </button>
     </div>
