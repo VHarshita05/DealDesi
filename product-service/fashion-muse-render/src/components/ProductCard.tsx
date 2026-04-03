@@ -10,11 +10,9 @@ type Product = {
 const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    if (product.id) {
-      navigate(`/product/${product.id}`);
-    }
-  };
+ const handleClick = () => {
+  navigate(`/product/${product.id}`);
+};
 
   return (
     <div
