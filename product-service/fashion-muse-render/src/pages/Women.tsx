@@ -131,7 +131,7 @@ export default function Women() {
           <ProductCard
             key={p.id ?? i}
             product={{
-               id: p.id ?? i, 
+               id: p.id, 
               name: p.name,
               price: p.price,
               image: p.image,
