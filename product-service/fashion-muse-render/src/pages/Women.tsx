@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-
+import ProductCard from "../components/ProductCard";
 const PRODUCTS_URL =
   import.meta.env.VITE_PRODUCTS_URL ||
   "https://dealdesi-product-service.onrender.com";
@@ -123,16 +123,16 @@ export default function Women() {
           gap: "20px",
         }}
       >
-        {products.map((p, i) => (
-          <div
-            key={p.id ?? i}
-            style={{
-              border: "1px solid #eee",
-              padding: "10px",
-              borderRadius: "8px",
-              background: "#fff",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-            }}
+       {products.map((p, i) => (
+  <ProductCard
+    key={p.id ?? i}
+    product={{
+      name: p.name,
+      price: p.price,
+      image: p.image
+    }}
+  />
+))}
           >
             {p.image ? (
               <img
