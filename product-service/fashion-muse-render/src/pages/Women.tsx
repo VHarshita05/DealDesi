@@ -123,17 +123,16 @@ export default function Women() {
           gap: "20px",
         }}
       >
-       {products.map((p, i) => (
+      {products.map((p, i) => (
   <ProductCard
     key={p.id ?? i}
     product={{
       name: p.name,
       price: p.price,
       image: p.image
-    }}
+}}
   />
 ))}
-          >
             {p.image ? (
               <img
                 src={p.image}
